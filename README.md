@@ -4,7 +4,7 @@ El proyecto **Escuelas Culturales Vallecaucanas**, operado por **Recreavalle** y
 
 ## Descripción del Proyecto
 
-A pesar de contar con una plataforma web para almacenar la información relacionada con las actividades culturales, el proyecto no disponía de un sistema adecuado para el análisis estadístico de los datos recopilados, lo que dificultaba la toma de decisiones basadas en información precisa.
+A pesar de contar con una plataforma web (SSISET) para almacenar la información relacionada con las actividades culturales, el proyecto no disponía de un sistema adecuado para el análisis estadístico de los datos recopilados, lo que dificultaba la toma de decisiones basadas en información precisa.
 
 Este trabajo de grado ha dado lugar al desarrollo de **SECVC (Sistema Estadístico Cultural del Valle del Cauca)**, una aplicación web que permite el seguimiento y monitoreo del cumplimiento de metas e indicadores del proyecto. La aplicación facilita el análisis cuantitativo y cualitativo de los datos recopilados, identificando patrones y tendencias que apoyan la toma de decisiones estratégicas para la mejora de la gestión y la sostenibilidad a largo plazo del proyecto.
 
