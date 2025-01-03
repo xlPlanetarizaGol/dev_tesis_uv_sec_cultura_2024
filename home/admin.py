@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from django.apps import apps
 from django.contrib import admin
+from django.contrib.auth.models import Permission
 
 # Register your models here.
 
@@ -10,6 +11,7 @@ for model in app_models:
     try:    
 
         admin.site.register(model)
+        admin.site.register(Permission)
 
     except Exception:
         pass

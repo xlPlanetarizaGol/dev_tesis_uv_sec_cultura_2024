@@ -1,0 +1,347 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<link rel="stylesheet" href="{% static 'assets/css/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/jqueryui.min.css' %}"> 
+
+
+<div class="row">
+  <!-- Tabla de Indicadores -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header text-center">
+        <h5>Avance de Indicadores KPIs: Seguimiento de Desempeño y Resultados - Vigencia 2024</h5>
+      </div>
+
+      <div id="buttons-container" class="card-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <button class="btn btn-success btn-sm" id="copy-btn">
+                    <i class="fas fa-copy fa-xs"></i> Copiar
+                </button>
+                <button class="btn btn-info btn-sm" id="csv-btn">
+                    <i class="fas fa-file fa-xs"></i> CSV
+                </button>
+                <button class="btn btn-warning btn-sm" id="excel-btn">
+                    <i class="fas fa-file-excel fa-xs"></i> Excel
+                </button>
+                <button class="btn btn-danger btn-sm" id="pdf-btn">
+                    <i class="fas fa-file-pdf fa-xs"></i> PDF
+                </button>
+            </div>
+            <form id="eliminar-registros-form">
+              <div class="mb-3">
+                  <label for="fecha" class="form-label">Seleccione un corte de pago a eliminar:</label>
+                  <div class="input-group">
+                      <select class="form-select" id="fecha" name="fecha">
+                          {% for fecha in fechas_carga %}
+                              <option value="{{ fecha }}">{{ fecha }}</option>
+                          {% endfor %}
+                      </select>
+                      <button type="submit" class="btn btn-danger">Eliminar</button>
+                  </div>
+              </div>
+          </form>
+          
+        </div>
+    </div>
+
+      <div class="card-body">
+        <table id="indicadores_2024" class="display hidden" style="width:100%">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Indicador</th>
+              <th>Meta</th>
+              <th>Mar</th>
+              <th>Abr</th>
+              <th>May</th>
+              <th>Jun</th>
+              <th>Jul</th>
+              <th>Ago</th>
+              <th>Sep</th>
+              <th>Oct</th>
+              <th>Nov</th>
+              <th>Dic</th>
+              <th>Total</th>
+              <th>Avance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for registro in registros_2024 %}
+            <tr>
+              <td>{{ registro.upload_date|date:"Y-m-d H:i:s" }}</td>
+              <td>{{ registro.type }}</td>
+              <td>{{ registro.initial_goal }}</td>
+              <td>{{ registro.marzo }}</td>
+              <td>{{ registro.abril }}</td>
+              <td>{{ registro.mayo }}</td>
+              <td>{{ registro.junio }}</td>
+              <td>{{ registro.julio }}</td>
+              <td>{{ registro.agosto }}</td>
+              <td>{{ registro.septiembre }}</td>
+              <td>{{ registro.octubre }}</td>
+              <td>{{ registro.noviembre }}</td>
+              <td>{{ registro.diciembre }}</td>
+              <td>{{ registro.quantia }}</td>
+              <td>
+                {{ registro.advance }}% 
+                {% if registro.advance >= 75 %}
+                    <span style="color: green;">🟢</span> <!-- Semáforo verde -->
+                {% elif registro.advance >= 50 %}
+                    <span style="color: yellow;">🟡</span> <!-- Semáforo amarillo -->
+                {% else %}
+                    <span style="color: red;">🔴</span> <!-- Semáforo rojo -->
+                {% endif %}
+            </td>            
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mapa Cali y Valle -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header text-center">
+        <h5>Población Beneficiaria - Impacto en la Región - Valle del Cauca</h5>
+      </div>
+      <div class="card-body">
+        <div id="mapa_cali_valle">{{ graficos_indicadores.mapa_cali_valle|safe }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Indicadores en línea -->
+<div class="row mt-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <div id="velocidad_indicator">{{ graficos_indicadores.velocidad_indicator|safe }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <div id="usuarios_indicator">{{ graficos_indicadores.usuarios_indicator|safe }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <div id="activaciones_indicator">{{ graficos_indicadores.activaciones_indicator|safe }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <div id="pedagogicos_indicator">{{ graficos_indicadores.pedagogicos_indicator|safe }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Indicadores Adicionales -->
+    <div class="card mt-3">
+      <div class="card-body">
+        {% if graficos_indicadores %}
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <div id="bitacoras_indicator">{{ graficos_indicadores.bitacoras_indicator|safe }}</div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <div id="join_indicator">{{ graficos_indicadores.join_indicator|safe }}</div>
+          </div>
+        </div>
+        <!-- Formulario para cargar archivos -->
+        <form id="upload-form" method="post" enctype="multipart/form-data" class="mt-3" onsubmit="mostrarSpinner()">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">Cargar Archivos</button>
+      </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'assets/js/jquery-3.7.0.js' %}"></script>
+<script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/dataTables.jqueryui.min.js' %}"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+
+<script>
+
+  $(document).ready(function() {
+    // Manejador de envío de formulario para eliminar registros por fecha
+    $("#eliminar-registros-form").submit(function(event){
+        event.preventDefault(); // Evita el envío del formulario por defecto
+
+        // Obtiene la fecha seleccionada por el usuario
+        var formattedDate = $("#fecha").val();
+
+        // Pregunta al usuario si realmente quiere eliminar los registros
+        var confirmDelete = confirm("¿Estás seguro de que quieres eliminar los registros para la fecha seleccionada?");
+
+        // Si el usuario confirma que quiere eliminar los registros, procede con la solicitud AJAX
+        if (confirmDelete) {
+            $.ajax({
+                url: '{% url "eliminar_registros_por_fecha" %}',
+                method: 'POST',
+                data: {
+                    'fecha': formattedDate,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response){
+                    alert(response.message);
+                    location.reload();
+                },
+                error: function(xhr, errmsg, err){
+                    console.log(xhr.status + ": " + xhr.responseText);
+                    alert('Error al eliminar registros. Por favor, inténtalo de nuevo.');
+                }
+            });
+        }
+    });
+
+    // Hacer una solicitud AJAX para obtener las fechas únicas
+    $.ajax({
+        url: '{% url "obtener_fechas_unicas_indicators" %}',
+        success: function(response){
+            var fechas_unicas = response.fechas_unicas_indicators; // Cambiado a 'fechas_unicas_indicators'
+
+            // Llenar el select con las fechas únicas obtenidas
+            var selectFecha = $('#fecha');
+
+            // Borrar todas las opciones existentes en el select
+            selectFecha.empty();
+
+            // Agregar una opción vacía al inicio
+            selectFecha.append($('<option>', {
+                value: '',
+                text: ''
+            }));
+
+            // Agregar las fechas únicas al select
+            $.each(fechas_unicas, function(index, fecha) {
+                selectFecha.append($('<option>', {
+                    value: fecha,
+                    text: fecha
+                }));
+            });
+
+            // Habilitar el formulario una vez que se hayan cargado las fechas únicas
+            $("#eliminar-registros-form").removeClass('hidden');
+        },
+        error: function(xhr, errmsg, err){
+            console.log(xhr.status + ": " + xhr.responseText);
+            alert('Error al obtener las fechas únicas. Por favor, inténtalo de nuevo.');
+        }
+    });
+});
+
+  jQuery(document).ready(function($) {
+    $.ajax({
+      url: "{% static 'assets/json/Spanish.json' %}",
+      dataType: 'json',
+      async: false,
+      success: function(data) {
+        $.extend(true, $.fn.dataTable.defaults, {
+          language: data
+        });
+      }
+    });
+
+    function obtenerNombreArchivo() {
+      var fechaActual = new Date();
+      var año = fechaActual.getFullYear();
+      var mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+      var dia = fechaActual.getDate().toString().padStart(2, '0');
+      
+      return 'indicadores_' + año + '_' + mes + '_' + dia;
+    }
+
+    var opcionesExportacion = {
+      columns: ':visible'
+    };
+
+    var botonesExportacion = [
+      {
+        extend: 'copy',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'csv',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'excel',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'pdf',
+        orientation: 'landscape',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      }
+    ];
+
+    var mediaTable = $('#indicadores_2024').removeClass('hidden').DataTable({
+      autoWidth: true, // Redimensiona las columnas automáticamente
+      buttons: botonesExportacion,
+      "scrollX": true, // Permitir desplazamiento horizontal si la tabla es demasiado ancha
+      "scrollCollapse": true, // Colapsar el desplazamiento si no es necesario
+  });
+
+    $('#copy-btn').on('click', function() {
+      mediaTable.button(0).trigger();
+    });
+
+    $('#csv-btn').on('click', function() {
+      mediaTable.button(1).trigger();
+    });
+
+    $('#excel-btn').on('click', function() {
+      mediaTable.button(2).trigger();
+    });
+
+    $('#pdf-btn').on('click', function() {
+      mediaTable.button(3).trigger();
+    });
+  });
+
+
+
+</script>
+
+
+
+  
+{% endblock content %}

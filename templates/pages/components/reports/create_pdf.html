@@ -1,0 +1,168 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="row">
+  <div class="col-sm-12">
+      <div class="card">
+          <div class="card-header">
+              <div id="buttons-container" class="text-center">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <h5>Registro de Informes en PDF</h5>
+                      <a href="{% url 'ver_pdf' %}" class="btn btn-link"><i class="feather icon-file-text"></i> Listar Informes</a>
+                  </div>
+              </div>
+          </div>
+
+          <div class="card-body">
+              <form id="uploadForm" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="row">
+                      <div class="col-md-6">
+
+                          <div class="form-group">
+                              <label for="id_period">Periodo:</label>
+                              <select class="form-control" id="id_period" name="period">
+                                  <option value="">-- Seleccione un periodo --</option>
+                                  <option value="2021">2020</option>
+                                  <option value="2021A">2021A</option>
+                                  <option value="2021B-2022A">2021B-2022A</option>
+                                  <option value="2022B">2022B</option>
+                                  <option value="2023A">2023A</option>
+                                  <option value="2023B">2024</option>
+                              </select>
+                          </div>
+
+                          <div class="form-group">
+                              <label for="id_name">Nombre del Archivo</label>
+                              <input type="text" class="form-control" id="id_name" name="nombre_archivo" placeholder="Escriba el nombre del archivo">
+                          </div>
+                          <div class="form-group">
+                              <label for="id_file">Seleccione un Archivo:</label>
+                              <div class="custom-file">
+                                  <input type="file" class="custom-file-input" id="id_file" name="file" onchange="updateFileName(this)">
+                                  <label class="custom-file-label" for="id_file">Elegir archivo...</label>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label for="exampleFormControlTextarea1">Observaciones / Comentarios </label>
+                              <textarea class="form-control" id="exampleFormControlTextarea1" name="exampleTextarea" rows="3"></textarea>
+                          </div>
+                          <button type="button" onclick="submitForm()" class="btn btn-primary"><i class="fas fa-cloud-upload-alt"></i> Cargar PDF</button>
+                      </div>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- [ Main Content ] end -->
+
+<script>
+  function updateFileName(input) {
+      var fileName = input.files[0].name;
+      var label = input.nextElementSibling;
+      label.innerHTML = fileName;
+  }
+
+  function clearFormFields() {
+    document.getElementById("id_period").value = '';
+    document.getElementById("id_name").value = '';
+    document.getElementById("id_file").value = '';
+    var fileLabel = document.querySelector(".custom-file-label");
+    fileLabel.innerHTML = 'Elegir archivo...';
+    document.getElementById("exampleFormControlTextarea1").value = '';
+    // Si tienes más campos, añádelos aquí
+  }
+
+  function displayErrorMessage(message) {
+    var errorMessage = document.createElement("div");
+    errorMessage.classList.add("alert", "alert-danger", "alert-dismissible", "fade", "show");
+    errorMessage.setAttribute("role", "alert");
+    errorMessage.innerHTML = `
+      ${message}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    `;
+    document.getElementById("error-container").appendChild(errorMessage);
+  }
+
+  function displaySuccessMessage(message) {
+    var successMessage = document.createElement("div");
+    successMessage.classList.add("alert", "alert-success", "alert-dismissible", "fade", "show");
+    successMessage.setAttribute("role", "alert");
+    successMessage.innerHTML = `
+      ${message}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    `;
+    document.getElementById("success-container").appendChild(successMessage);
+
+    // Desaparece la alerta de éxito después de 5 segundos
+    setTimeout(function() {
+      successMessage.remove();
+    }, 5000);
+  }
+
+  function validateForm() {
+    var period = document.getElementById("id_period").value;
+    var fileName = document.getElementById("id_name").value;
+    var fileInput = document.getElementById("id_file");
+    var file = fileInput.value;
+    var comments = document.getElementById("exampleFormControlTextarea1").value;
+
+    if (period === '' || fileName === '' || file === '' || comments === '') {
+      displayErrorMessage("Por favor, complete todos los campos.");
+      return false;
+    }
+
+    // Validar si el archivo cargado es un PDF
+    var allowedExtensions = /(\.pdf)$/i;
+    if (!allowedExtensions.exec(fileInput.value)) {
+      displayErrorMessage("Por favor, cargue solo archivos PDF.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function submitForm() {
+    if (!validateForm()) {
+      return;
+    }
+
+    var formData = new FormData(document.getElementById("uploadForm"));
+    var xhr = new XMLHttpRequest();
+    
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          // Muestra la confirmación exitosa
+          displaySuccessMessage("El archivo se ha cargado correctamente.");
+          clearFormFields(); // Limpia los campos del formulario
+        } else {
+          // Manejar errores si es necesario
+          console.error('Error al cargar el archivo:', xhr.status);
+        }
+      }
+    };
+    
+    xhr.open("POST", "{% url 'pdf_view' %}", true);
+    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+    xhr.send(formData);
+  }
+</script>
+
+<div id="error-container"></div>
+<div id="success-container"></div>
+
+
+{% endblock content %}
+

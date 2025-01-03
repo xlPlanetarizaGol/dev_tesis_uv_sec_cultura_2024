@@ -58,11 +58,11 @@ File: style.css
       Custom css start
 ==========================  **/
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Work Sans',sans-serif;
   font-size: 14px;
-  color: #888;
+  color: #000;
   font-weight: 400;
-  background: #f4f7fa;
+  background: #f2f2f2;
   position: relative;
 }
 
@@ -200,18 +200,20 @@ p.text-muted {
   position: relative;
 }
 .card .card-header h5 {
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 0;
-  color: #000;
+  color: #343434;
   font-size: 17px;
   font-weight: 400;
   display: inline-block;
   margin-right: 10px;
   line-height: 1.1;
   position: relative;
+  font-weight: bold;
 }
 .card .card-header h5:after {
   content: "";
-  background-color: #04a9f5;
+  background-color: #07a4a8;
   position: absolute;
   left: -25px;
   top: 0;
@@ -1516,7 +1518,6 @@ p.text-muted {
           align-items: center;
 }
 .b-brand .b-bg {
-  background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
   border-radius: 10px;
   width: 35px;
   height: 35px;
@@ -1680,7 +1681,7 @@ p.text-muted {
   position: relative;
   top: 0;
   background: transparent;
-  color: #3f4d67;
+  color: #000;
   width: calc(100% - 264px);
   margin-left: 264px;
   -webkit-transition: all 0.3s ease-in-out;
@@ -1705,7 +1706,7 @@ p.text-muted {
 .pcoded-header .input-group .input-group-text,
 .pcoded-header a,
 .pcoded-header dropdown-toggle {
-  color: #3f4d67;
+  color: #000;
 }
 .pcoded-header .input-group .input-group-text:hover,
 .pcoded-header a:hover,
@@ -2047,7 +2048,7 @@ p.text-muted {
 }
 
 .navbar-brand {
-  background: #3f4d67;
+  background: #07a4a8;
 }
 
 .pcoded-header:before,
@@ -2058,17 +2059,18 @@ p.text-muted {
 }
 
 .pcoded-navbar {
+  font-weight: bold;
   display: block;
   z-index: 1029;
   position: fixed;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  -webkit-box-shadow: 1px 0 20px 0 #3f4d67;
+  -webkit-box-shadow: 1px 0 20px 0 #fff;
           box-shadow: 1px 0 20px 0 #3f4d67;
   width: 264px;
   height: 100vh;
   top: 0;
-  background: #3f4d67;
+  background: #f2f2f2;
   color: #a9b7d0;
 }
 .pcoded-navbar ul {
@@ -2281,11 +2283,11 @@ p.text-muted {
   opacity: 0.5;
 }
 .pcoded-navbar .pcoded-submenu {
-  background: #39465e;
+  background: #fff;
   padding: 15px 0;
 }
 .pcoded-navbar a {
-  color: #a9b7d0;
+  color: #343434;
 }
 .pcoded-navbar .navbar-content,
 .pcoded-navbar .navbar-wrapper {
@@ -2473,17 +2475,17 @@ p.text-muted {
   opacity: 1;
 }
 .pcoded-navbar .pcoded-menu-caption {
-  color: #e8edf7;
+  color: #07a4a8;
 }
 .pcoded-navbar .pcoded-inner-navbar li.active > a, .pcoded-navbar .pcoded-inner-navbar li:focus > a, .pcoded-navbar .pcoded-inner-navbar li:hover > a {
-  color: #1dc4e9;
+  color: #07a4a8;
 }
 .pcoded-navbar .pcoded-inner-navbar li .pcoded-submenu > li.active > a:before, .pcoded-navbar .pcoded-inner-navbar li .pcoded-submenu > li:focus > a:before, .pcoded-navbar .pcoded-inner-navbar li .pcoded-submenu > li:hover > a:before {
-  background: #1dc4e9;
+  background: #07a4a8;
 }
 .pcoded-navbar .pcoded-inner-navbar > li.active:after, .pcoded-navbar .pcoded-inner-navbar > li.pcoded-trigger:after {
   content: "";
-  background-color: #1dc4e9;
+  background-color: #07a4a8;
   z-index: 1027;
   position: absolute;
   left: 0;
@@ -2492,7 +2494,7 @@ p.text-muted {
   height: calc(100% - 5px);
 }
 .pcoded-navbar .pcoded-inner-navbar > li.active > a, .pcoded-navbar .pcoded-inner-navbar > li.pcoded-trigger > a {
-  background: #333f54;
+  background: #07a4a8;
   color: #fff;
 }
 .pcoded-navbar .pcoded-inner-navbar > .pcoded-menu-caption.active:after, .pcoded-navbar .pcoded-inner-navbar > .pcoded-menu-caption.pcoded-trigger:after {
@@ -2829,7 +2831,7 @@ p.text-muted {
 /* ==========================    Rsponsive Menu  start   ====================== */
 @media only screen and (max-width: 991px) {
   .pcoded-header {
-    background: #3f4d67;
+    background: #07a4a8;
     color: #fff;
   }
   .pcoded-header .input-group-text,
@@ -3269,7 +3271,7 @@ p.text-muted {
 .theme-color > a span:before {
   width: 30%;
   left: 0;
-  background: #3f4d67;
+  background: #000;
 }
 .lay-customizer .theme-color > a span:after,
 .theme-color > a span:after {
@@ -3562,7 +3564,7 @@ p.text-muted {
 }
 .lay-customizer .theme-color.prelayout-color > a[data-value="l2"] > span:nth-child(1):before,
 .theme-color.prelayout-color > a[data-value="l2"] > span:nth-child(1):before {
-  background: #3f4d67;
+  background: #000;
 }
 .lay-customizer .theme-color.prelayout-color > a[data-value="l2"] > span:nth-child(2):before,
 .theme-color.prelayout-color > a[data-value="l2"] > span:nth-child(2):before {
@@ -3570,7 +3572,7 @@ p.text-muted {
 }
 .lay-customizer .theme-color.prelayout-color > a[data-value="l2-2"] > span:nth-child(1):before,
 .theme-color.prelayout-color > a[data-value="l2-2"] > span:nth-child(1):before {
-  background: #3f4d67;
+  background: #000;
 }
 .lay-customizer .theme-color.prelayout-color > a[data-value="l2-2"] > span:nth-child(2):before,
 .theme-color.prelayout-color > a[data-value="l2-2"] > span:nth-child(2):before {
@@ -3578,7 +3580,7 @@ p.text-muted {
 }
 .lay-customizer .theme-color.prelayout-color > a[data-value="l3"] > span:nth-child(1):before,
 .theme-color.prelayout-color > a[data-value="l3"] > span:nth-child(1):before {
-  background: #3f4d67;
+  background: #000;
 }
 .lay-customizer .theme-color.prelayout-color > a[data-value="l3"] > span:nth-child(2):before,
 .theme-color.prelayout-color > a[data-value="l3"] > span:nth-child(2):before {
@@ -3897,7 +3899,7 @@ p.text-muted {
 }
 @media only screen and (max-width: 991px) {
   .theme-horizontal ~ .pcoded-header {
-    background: #3f4d67;
+    background: #000;
   }
   .theme-horizontal ~ .pcoded-header .horizontal-dasktop {
     display: none;
@@ -4406,7 +4408,7 @@ p.text-muted {
   -webkit-text-fill-color: unset;
 }
 .pcoded-navbar.brand-default .header-logo, .pcoded-navbar[class*="navbar-"].brand-default .header-logo {
-  background: #3f4d67;
+  background: #000;
 }
 
 /* ====== [ Brand color end ] ======== */
@@ -5020,7 +5022,7 @@ body.box-layout .pcoded-navbar.theme-horizontal ~ .pcoded-header {
 .doc-img > a span:before {
   width: 30%;
   left: 0;
-  background: #3f4d67;
+  background: #000;
 }
 .doc-img > a span:after {
   width: 70%;
@@ -5372,7 +5374,7 @@ body.layout-6 .pcoded-navbar.menu-light .header-logo {
           box-shadow: none;
 }
 body.layout-6 .pcoded-navbar .slimScrollDiv {
-  background: #3f4d67;
+  background: #000;
   border-radius: 0 10px 0 0;
   -webkit-box-shadow: 0 0 20px 0 #3f4d67;
           box-shadow: 0 0 20px 0 #3f4d67;
@@ -6742,7 +6744,7 @@ body.layout-8 .card:hover {
 .datepicker-dropdown {
   padding: 20px;
   color: #fff;
-  background: #3f4d67;
+  background: #000;
   font-size: 14px;
 }
 .datepicker-dropdown:after {
@@ -10597,4 +10599,27 @@ div.code-toolbar > .toolbar span:hover {
 		-webkit-box-shadow: 0 0 0 0 rgba(4, 169, 245, 0);
 		box-shadow: 0 0 0 0 rgba(4, 169, 245, 0)
 	}
+}
+
+
+/* Estilos para el encabezado */
+.card-header h5 {
+  color: #333;
+  font-size: 24px;
+}
+
+/* Estilos para los datos de indicadores */
+.col-md-6 p {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+/* Estilos para los gráficos de indicadores */
+.col-md-6 #velocidad_indicator,
+.col-md-6 #usuarios_indicator,
+.col-md-6 #activaciones_indicator,
+.col-md-6 #pedagogicos_indicator,
+.col-md-6 #bitacoras_indicator,
+.col-md-6 #join_indicator {
+  margin-top: 20px;
 }

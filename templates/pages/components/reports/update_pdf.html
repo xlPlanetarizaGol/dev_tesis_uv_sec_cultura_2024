@@ -1,0 +1,96 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>Editar Informe en PDF</h5>
+          <a href="{% url 'ver_pdf' %}"  class="btn btn-dark"><i class="feather icon-corner-up-left"></i>Regresar</a>
+        </div>
+        <div class="card-body">
+<form action="{% url 'editar_pdf' pdf.id %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="period">Periodo:</label>
+        <select class="form-control" id="period" name="period">
+            <option value="">-- Seleccione un periodo --</option>
+            <option value="2021" {% if pdf.period == "2021" %} selected {% endif %}>2021</option>
+            <option value="2021A" {% if pdf.period == "2021A" %} selected {% endif %}>2021A</option>
+            <option value="2021B-2022A" {% if pdf.period == "2021B-2022A" %} selected {% endif %}>2021B-2022A</option>
+            <option value="2022B" {% if pdf.period == "2022B" %} selected {% endif %}>2022B</option>
+            <option value="2023A" {% if pdf.period == "2023A" %} selected {% endif %}>2023A</option>
+            <option value="2023B" {% if pdf.period == "2023B" %} selected {% endif %}>2023B</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="nombre_archivo">Nombre del archivo:</label>
+        <input type="text" class="form-control" id="nombre_archivo" name="nombre_archivo" value="{{ pdf.name }}" placeholder="Escriba el nombre del archivo">
+    </div>
+
+    <div class="form-group">
+        <label for="file">Seleccione un Archivo:</label>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="file" name="file" onchange="updateFileName(this)">
+            <label class="custom-file-label" for="file">Elegir archivo...</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleTextarea">Observaciones / Comentarios:</label>
+        <textarea class="form-control" id="exampleTextarea" name="exampleTextarea" rows="3">{{ pdf.observation }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary"><i class="fas fa-cloud-upload-alt"></i> Guardar cambios</button>
+</form>
+
+
+<div id="error-container"></div>
+<div id="success-container"></div>
+
+<script>
+
+        // Agregar un evento submit al formulario
+        document.querySelector('form').addEventListener('submit', function(event) {
+            // Obtener el archivo seleccionado por el usuario
+            var fileInput = document.getElementById('file');
+            var file = fileInput.files[0];
+    
+            // Verificar si el archivo es PDF
+            if (file && file.type !== 'application/pdf') {
+                // Mostrar un mensaje de error
+                alert('Por favor, selecciona un archivo PDF válido.');
+                // Prevenir el envío del formulario
+                event.preventDefault();
+            }
+        });
+
+    // Función para mostrar la alerta de confirmación exitosa
+    function showSuccessAlert() {
+        // Crear el elemento de la alerta
+        var alertDiv = document.createElement('div');
+        alertDiv.classList.add('alert', 'alert-success', 'mt-3');
+        alertDiv.textContent = '¡El PDF se ha editado exitosamente!';
+
+        // Obtener el contenedor de éxito y agregar la alerta
+        var successContainer = document.getElementById('success-container');
+        successContainer.appendChild(alertDiv);
+
+        // Desvanecer la alerta después de 3 segundos
+        setTimeout(function() {
+            alertDiv.remove();
+        }, 3000);
+    }
+
+    // Agregar un evento submit al formulario
+    document.querySelector('form').addEventListener('submit', function() {
+        // Mostrar la alerta de éxito cuando se envía el formulario
+        showSuccessAlert();
+    });
+
+    
+</script>
+
+{% endblock content %}

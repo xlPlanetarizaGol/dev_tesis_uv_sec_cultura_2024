@@ -1,0 +1,31 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+    <!-- Aquí puedes agregar el código para las migas de pan (breadcrumbs) si es necesario -->
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="col-sm-12">
+  <div class="card">
+    <div id="buttons-container" class="card-header">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h5 style="margin: 0;">Marginación Cultural en el Valle del Cauca</h5>
+      </div>
+    </div>
+    <div class="card-body">
+        <em>La marginación cultural en Cali y el Valle del Cauca se manifiesta en la falta de reconocimiento y valoración de las prácticas culturales, tradiciones y saberes de las comunidades. Además, la concentración de la riqueza y el poder en manos de ciertos grupos sociales ha generado inequidades estructurales que profundizan la marginación. Es por esto que durante la administración de la Dra. Dilian Francisca Toro como gobernadora, se desarrolló el índice de marginación cultural junto con el programa Red de Atención Cultural en el año 2019, siendo este uno de los estudios más importantes en desigualdad y marginación cultural aún vigentes en 2024.</em>
+    </div>
+    
+  </div>
+</div>
+
+<div style="display: flex;">
+  <div style="flex: 1;">
+    <embed src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://drive.google.com/uc?id=14_2g6J0K9MqOCgg8v0y1jrmqyxHLAUag" type="application/pdf" style="width: 100%; height: 1000px; border: none;" />
+  </div>
+  <div style="flex: 1;">
+    <embed src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://drive.google.com/uc?id=1pBJrCN98Kuzfdf3z6jVq8_RiVuL_P0si" type="application/pdf" style="width: 100%; height: 1000px; border: none;" />
+  </div>
+</div>
+{% endblock content %}

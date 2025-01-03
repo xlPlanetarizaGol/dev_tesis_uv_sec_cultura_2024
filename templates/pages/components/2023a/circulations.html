@@ -1,0 +1,163 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
+<!-- [ Main Content ] start -->
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div id="buttons-container" class="card-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h5 style="margin: 0;">Circulaciones Culturales</h5>
+          <div>
+            <button class="btn btn-success btn-sm" id="copy-btn">
+              <i class="fas fa-copy fa-sm"></i> Copiar
+            </button>
+            <button class="btn btn-info btn-sm" id="csv-btn">
+              <i class="fas fa-file fa-sm"></i> CSV
+            </button>
+            <button class="btn btn-warning btn-sm" id="excel-btn">
+              <i class="fas fa-file-excel fa-sm"></i> Excel
+            </button>
+            <button class="btn btn-danger btn-sm" id="pdf-btn">
+              <i class="fas fa-file-pdf fa-sm"></i> PDF
+            </button>
+          </div>
+        </div>
+      </div>
+      
+
+      <link rel="stylesheet" href="{% static 'assets/css/jquery-ui.css' %}">
+      <link rel="stylesheet" href="{% static 'assets/css/jqueryui.min.css' %}">
+
+      <table id="circulation_2023a" class="display hidden" style="width:100%">
+        <thead>
+            <tr>
+              <th>Id</th>
+              <th>Consecutivo</th>
+              <th>Usuario</th>
+              <th>Identificación</th>
+              <th>NAC</th>
+              <th>Rol</th>
+              <th>Fecha Actividad</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for circulation in circulations_2023 %}
+            <tr>
+                <td>{{ circulation.id }}</td>
+                <td>{{ circulation.consecutive }}</td>
+                <td>{{ circulation.user }}</td>
+                <td>{{ circulation.user_document_number }}</td>
+                <td>{{ circulation.user_nac }}</td>
+                <td>{{ circulation.user_role }}</td>
+                <td>{{ circulation.activity_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Librerías DataTables y sus extensiones -->
+<script src="{% static 'assets/js/jquery-3.7.0.js' %}"></script>
+<script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/dataTables.jqueryui.min.js' %}"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<script>
+  jQuery(document).ready(function($) {
+    // Load language data for DataTable
+    $.ajax({
+      url: "{% static 'assets/json/Spanish.json' %}",
+      dataType: 'json',
+      async: false,
+      success: function(data) {
+        $.extend(true, $.fn.dataTable.defaults, {
+          language: data
+        });
+      }
+    });
+
+    // Función para obtener el nombre de archivo dinámico
+    function obtenerNombreArchivo() {
+      var fechaActual = new Date();
+      var año = fechaActual.getFullYear();
+      var mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // Agrega cero a la izquierda si es necesario
+      var dia = fechaActual.getDate().toString().padStart(2, '0'); // Agrega cero a la izquierda si es necesario
+    
+      return 'circulaciones_2023a_' + año + '_' + mes + '_' + dia;
+    }
+
+    // Opciones de exportación comunes
+    var opcionesExportacion = {
+      columns: ':visible'
+    };
+
+    // Botones de exportación
+    var botonesExportacion = [
+      {
+        extend: 'copy',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'csv',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'excel',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'pdf',
+        orientation: 'landscape',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      }
+    ];
+
+    // Inicializar DataTable
+    var mediaTable = $('#circulation_2023a').removeClass('hidden').DataTable({
+      responsive: true,
+      buttons: botonesExportacion,
+
+    });
+
+    // Eventos de clic para los botones personalizados
+    $('#copy-btn').on('click', function() {
+      mediaTable.button(0).trigger();
+    });
+
+    $('#csv-btn').on('click', function() {
+      mediaTable.button(1).trigger();
+    });
+
+    $('#excel-btn').on('click', function() {
+      mediaTable.button(2).trigger();
+    });
+
+    $('#pdf-btn').on('click', function() {
+      mediaTable.button(3).trigger();
+    });
+  });
+</script>
+
+{% endblock content %}

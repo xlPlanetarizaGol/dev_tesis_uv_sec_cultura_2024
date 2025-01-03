@@ -5,33 +5,25 @@
     <div class="navbar-brand header-logo">
       <a href="{% url 'index' %}" class="b-brand">
         <div class="b-bg">
-          <i class="feather icon-trending-up"></i>
+          <i><img src="{% static 'assets/images/ecp.png' %}" alt="Logo" width="50" height="50"></i>
         </div>
-        <span class="b-title">Datta Able</span>
+        <span class="b-title">SECVC</span>
       </a>
       <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
     </div>
     <div class="navbar-content scroll-div">
       <ul class="nav pcoded-inner-navbar">
         <li class="nav-item pcoded-menu-caption">
-          <label>Navigation</label>
+          <label>ESCUELAS CULTURALES VALLECAUCANAS</label>
         </li>
-        <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" class="nav-item {% if 'index' in segment %}active{% endif %}">
+        <li class="nav-item {% if 'index' in segment %}active{% endif %}">
           {% if request.user.is_superuser %}
           <a href="{% url 'admin:index' %}" class="nav-link ">
           {% else %}
           <a href="{% url 'index' %}" class="nav-link ">
           {% endif %}
-            <span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span>
+            <span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Escuelas Culturales</span>
           </a>
-        </li>
-        <li class="nav-item {% if 'tables' in segment %}active{% endif %}">
-          <a href="{% url 'tables' %}" class="nav-link "><span class="pcoded-micon"><i
-                class="feather icon-server text-c-green"></i></span><span class="pcoded-mtext">Dynamic Tables</span></a>
-        </li>
-        <li class="nav-item">
-          <a target="_blank" href="/api/product/" class="nav-link "><span class="pcoded-micon"><i
-                class="feather icon-zap text-c-green"></i></span><span class="pcoded-mtext">Generated API</span></a>
         </li>
 
         {% if not request.user.is_authenticated %}
@@ -39,10 +31,9 @@
           data-username="Authentication Sign up Sign in reset password Change password Personal information profile settings map form subscribe"
           class="nav-item pcoded-hasmenu">
           <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i
-                class="feather icon-lock"></i></span><span class="pcoded-mtext">Authentication</span></a>
+                class="feather icon-lock"></i></span><span class="pcoded-mtext">Autenticación</span></a>
           <ul class="pcoded-submenu">
-            <li class=""><a href="{% url 'login' %}" class="">Sign IN</a></li>
-            <li class=""><a href="{% url 'register' %}" class="">Sign UP</a></li>
+            <li class=""><a href="{% url 'login' %}" class="">Iniciar Sesión</a></li>
           </ul>
         </li>
         {% endif %}
@@ -78,73 +69,578 @@
         {% endif %}
 
         {% if request.user.is_authenticated and not request.user.is_superuser %}
+        
+        {% if user.is_staff %}
+
         <li class="nav-item pcoded-menu-caption">
-          <label>UI Element</label>
+          <label>Gestión de Indicadores</label>
         </li>
-        <li
-          data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds"
-          class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
-          <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i
-                class="feather icon-box"></i></span><span class="pcoded-mtext">Components</span></a>
-          <ul class="pcoded-submenu">
-            <li class="{% if 'button' in segment %}active{% endif %}"><a href="{% url 'bc_button' %}" class="">Button</a></li>
-            <li class="{% if 'badges' in segment %}active{% endif %}"><a href="{% url 'bc_badges' %}" class="">Badges</a></li>
-            <li class="{% if 'breadcrumbs_&_pagination' in segment %}active{% endif %}"><a href="{% url 'bc_breadcrumb_pagination' %}" class="">Breadcrumb & paggination</a></li>
-            <li class="{% if 'collapse' in segment %}active{% endif %}"><a href="{% url 'bc_collapse' %}" class="">Collapse</a></li>
-            <li class="{% if 'navs_&_tabs' in segment %}active{% endif %}"><a href="{% url 'bc_tabs' %}" class="">Tabs & pills</a></li>
-            <li class="{% if 'typography' in segment %}active{% endif %}"><a href="{% url 'bc_typography' %}" class="">Typography</a></li>
+        <li class="nav-item">
+            <a href="{% url 'indicadores_2024' %}" class="nav-link">
+                <span class="pcoded-micon"><i class="feather icon-trending-up"></i></span>
+                <span class="pcoded-mtext">Indicadores</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{% url 'impact_2024' %}" class="nav-link">
+              <span class="pcoded-micon"><i class="feather icon-layers"></i></span>
+              <span class="pcoded-mtext">Análisis Multivariable</span>
+          </a>
+      </li>
+      {% endif %}
+
+      {% if user.is_staff %}
+      <li class="nav-item pcoded-menu-caption">
+        <label>Gestión de Pagos</label>
+      </li>
+      <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+
+        <a href="javascript:" class="nav-link">
+            <span class="pcoded-micon"><i class="feather icon-credit-card"></i></span>
+            <span class="pcoded-mtext">Administración de Pagos</span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="">
+              <a href="{% url 'calcular_registros_por_semana' %}" class="">Monitor Cultural</a>
+            </li>
+            <li class="">
+                <a href="{% url 'index' %}" class="">Instructor Cultural</a>
+            </li>
+            <li class="">
+                <a href="{% url 'index' %}" class="">Embajador Cultural</a>
+            </li>
+            <li class="">
+                <a href="{% url 'index' %}" class="">Gestor Cultural</a>
+            </li>
+        </ul>
+    </li>
+    {% endif %}
+
+        <li class="nav-item pcoded-menu-caption">
+          <label>Gestión de Proyectos</label>
+        </li>
+
+        <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+          <a href="javascript:" class="nav-link">
+              <span class="pcoded-micon"><i class="feather icon-globe"></i></span>
+              <span class="pcoded-mtext">1240.20.2-3310|2020</span>
+          </a>
+
+                  <ul class="pcoded-submenu">
+                    <li class="">
+                      <a href="{% url 'listar_dialogue_tables_2020' %}" class="">Anexo 3 - Mesas de Diálogo</a>
+                  </li>
+                    <li class="">
+                      <a href="{% url 'listar_media' %}" class="">Anexo 4 - Medios Difusión</a>
+                  </li>
+                      <li class="">
+                          <a href="{% url 'listar_acudientes_2020' %}" class="">Anexo 5 - Acudientes</a>
+                      </li>
+                      <li class="">
+                          <a href="{% url 'listar_beneficiarios_2020' %}" class="">Anexo 5 - Beneficiarios</a>
+                      </li>
+                      <li class="">
+                        <a href="{% url 'listar_transfers_2020' %}" class="">Anexos [6,7,8,9] - Transferencias</a>
+                    </li>
+                    <li class="">
+                      <a href="{% url 'listar_sincronicos_2020' %}" class="">Anexo 10 - Encuentros Sincrónicos</a>
+                  </li>
+                  <li class="">
+                    <a href="{% url 'listar_citas_2020' %}" class="">Anexo 12 - Rutas de Atención Psicosocial</a>
+                </li>
+                      <li class="">
+                          <a href="{% url 'listar_contratos_2020' %}" class="">Anexo 14 - Contratación</a>
+                      </li>
 
 
-            <li class="{% if 'feather_icon' in segment %}active{% endif %}"><a href="{% url 'icon_feather' %}" class="">Feather<span
-                  class="pcoded-badge label label-danger">NEW</span></a></li>
-          </ul>
+                  </ul>
+              </li>
+      </li>
+      
+          
+
+<li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+  <a href="javascript:" class="nav-link">
+      <span class="pcoded-micon"><i class="feather icon-globe"></i></span>
+      <span class="pcoded-mtext">13.03-0045|2021A</span>
+
+  </a>
+  <ul class="pcoded-submenu">
+      <li class="">
+          <a href="{% url 'listar_plataform_training_2021a' %}" class="">2.1.2 Capacitaciones Plataforma</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_beneficiarios_impacto' %}" class="">2.1.3 Seguimiento de Participantes</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_instruments_2021a' %}" class="">2.1.4 Instrumentos Plataforma</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_dialogue_tables_2021a' %}" class="">2.2.1 Mesas de Diálogo</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_metho_transf_2021a' %}" class="">3.1.1.1 Transferencias Metodológicas</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_psycho_transfer_2021a' %}" class="">3.1.1.2 Transferencias Psicosociales</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_bitacoras_2021a' %}" class="">3.1.2 Jornadas Pacto</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_beneficiarios_2021a' %}" class="">3.1.2.1 Cargue de Beneficiarios</a>
+      </li>
+      <li class="">
+        <a href="{% url 'listar_pedagogical_2021a' %}" class="">3.1.2.2 Fichas Pedagógicas</a>
+    </li>
+    <li class="">
+      <a href="{% url 'listar_psychosocial_2021a' %}" class="">3.1.3 Citas de Atención Psicosocial</a>
+  </li>
+  </ul>
+</li>
+
+<li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+  <a href="javascript:" class="nav-link">
+      <span class="pcoded-micon"><i class="feather icon-globe"></i></span>
+      <span class="pcoded-mtext">13.03-0113|2021B-2022A</span>
+
+  </a>
+  <ul class="pcoded-submenu">
+      <li class="">
+          <a href="{% url 'listar_follow_participants_2021b' %}" class="">1.2 Seguimiento de Participantes</a>
+      </li>
+      <li class="">
+          <a href="{% url 'index' %}" class="">1.3 Instrumentos Plataforma</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_territorial_tables_2021b' %}" class="">2.1 Mesas Territoriales</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_dev_cultural_act_2021b' %}" class="">2.2 Desarrollo de lo Concertado en 2.1 (Activación Cultural)</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_feedactcultural_2021b' %}" class="">2.3 Retroalimentación Activaciones Culturales</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_metho_instruc_2021b' %}" class="">3.1 Instrucción Metodológica (Metodológos)</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_psycho_instruc_2021b' %}" class="">3.1 Instrucción Metodológica (Psicosociales)</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_ben_capacity_2021b' %}" class="">3.2 Beneficiarios por Aforo</a>
+      </li>
+      <li class="">
+        <a href="{% url 'listar_beneficiaries_2021b' %}" class="">3.2 Cargue de Beneficiarios</a>
+      </li>
+    <li class="">
+      <a href="{% url 'listar_pedagogical_2021b' %}" class="">3.3 Elaboración Ficha Pedagógica</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_dev_cultural_act_2021b' %}" class="">3.4 Desarrollo de las Jornadas de Activación Cultural</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_psychosocial_2021b' %}" class="">3.5 Citas de Atención Psicosocial</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_circulations_cultural_2021b' %}" class="">4.1 Actividades de Circulación Cultural</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_artistic_sample_2021b' %}" class="">4.2 Muestras Artísticas</a>
+     </li>
+
+  </ul>
+</li>
+
+<li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+  <a href="javascript:" class="nav-link">
+      <span class="pcoded-micon"><i class="feather icon-globe"></i></span>
+      <span class="pcoded-mtext">13.03-0123|2022B</span>
+
+  </a>
+  <ul class="pcoded-submenu">
+      <li class="">
+          <a href="{% url 'listar_follow_participants_2021b' %}" class="">1.1 Seguimiento Usuarios</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_dialogue_tables_2022b' %}" class="">2.1 Espacios de Diálogo y Concertación Cultural</a>
+      </li>
+      <li class="">
+          <a href="{% url 'index' %}" class="">2.2 Desarrollo de lo Concertado en 2.1 (Activación Cultural)</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_metho_instruct_2022b' %}" class="">3.1 Instrucción Metodológica (Metodológos)</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_psycho_instruc_2022b' %}" class="">3.1 Instrucción Metodológica (Psicosociales)</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_pedagogical_2022b' %}" class="">3.2 Planeación Pedagógica para la Activación Cultural</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_binnacles_2022b' %}" class="">3.3 Desarrollo Jornadas Pacto</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_artistic_sample_2021b' %}" class="">3.4 Proceso de Arte Terapia</a>
+      </li>
+      <li class="">
+        <a href="{% url 'listar_ensemble_2022b' %}" class="">3.5 Ensamble Cultural</a>
+      </li>
+    <li class="">
+      <a href="{% url 'listar_seedbed_2022b' %}" class="">3.6 Semillero Cultural</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_tap_metho_2022b' %}" class="">3.7 Tapete Metodológico</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_parents_2022b' %}" class="">3.8 Escuela de Padres</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_strategys_2022b' %}" class="">5.3 Actividades de Apoyo a Estrategias de Circulación y Visibilziación</a>
+     </li>
+
+  </ul>
+</li>
+
+<li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+  <a href="javascript:" class="nav-link">
+      <span class="pcoded-micon"><i class="feather icon-globe"></i></span>
+      <span class="pcoded-mtext">13.03-0095|2023</span>
+
+  </a>
+  <ul class="pcoded-submenu">
+      <li class="">
+          <a href="{% url 'listar_means_verification' %}" class="">1.1 Seguimiento y Validación Medios de Verificación</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_verification_follow' %}" class="">1.2 Seguimiento y Validación Impacto</a>
+      </li>
+      <li class="">
+          <a href="{% url 'index' %}" class="">1.3 Acompañamiento y Verificación Cualitativa</a>
+      </li>
+      <li class="">
+          <a href="{% url 'listar_dialogue_tables' %}" class="">2.1 Desarrollar Espacios de Diálogo</a>
+      </li>
+
+      <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+        <a href="#" class="nav-link">
+            <span class="pcoded-mtext">2.2 Desarrollo de lo Concertado en 2.1</span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="">
+                <a href="{% url 'listar_activations' %}" class="desplegar-submenu">Activación</a>
+            </li>
+            <li class="">
+                <a href="{% url 'listar_circulation' %}" class="desplegar-submenu">Circulación</a>
+            </li>
+            <li class="">
+                <a href="{% url 'listar_ensamble' %}" class="desplegar-submenu">Ensamble</a>
+            </li>
+            <li class="">
+                <a href="{% url 'listar_show_cultural' %}" class="desplegar-submenu">Show Cultural</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+      <a href="#" class="nav-link">
+          <span class="pcoded-mtext">3.1 Fortalecimiento Metodológico</span>
+      </a>
+      <ul class="pcoded-submenu">
+          <li class="">
+              <a href="{% url 'listar_transfer_methodological' %}" class="desplegar-submenu">Metodológicos</a>
+          </li>
+          <li class="">
+              <a href="{% url 'listar_transfer_psychosocial' %}" class="desplegar-submenu">Psicosociales</a>
+          </li>
+      </ul>
+  </li>
+
+  <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+    <a href="#" class="nav-link">
+        <span class="pcoded-mtext">3.2 Plan. Pedagógico</span>
+    </a>
+    <ul class="pcoded-submenu">
+        <li class="">
+            <a href="{% url 'listar_planning_instructors' %}" class="desplegar-submenu">Instructores</a>
         </li>
+        <li class="">
+            <a href="{% url 'listar_planning_monitors' %}" class="desplegar-submenu">Monitores</a>
+        </li>
+    </ul>
+</li>
+
+      <li class="">
+          <a href="{% url 'listar_binnacles' %}" class="">3.3 Desarrollo Jornadas PACTO</a>
+      </li>
+
+      <li class="">
+        <a href="{% url 'listar_cultural_seedbed' %}" class="">3.4 Semillero Cultural</a>
+      </li>
+
+      <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+        <a href="#" class="nav-link">
+            <span class="pcoded-mtext">3.5 Jornadas de Acompañamientos</span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="">
+                <a href="{% url 'listar_jornality_asym' %}" class="desplegar-submenu">Apoyo al Seguimiento</a>
+            </li>
+            <li class="">
+                <a href="{% url 'listar_jornality_metho' %}" class="desplegar-submenu">Metodólogos</a>
+            </li>
+            <li class="">
+                <a href="{% url 'listar_jornality_super' %}" class="desplegar-submenu">Supervisores</a>
+            </li>
+        </ul>
+    </li>
+    
+    
+     <li class="">
+      <a href="{% url 'listar_jornality_psychosocial' %}" class="">3.6 Jornada de Acompañamiento Psicosocial</a>
+     </li>
+     <li class="">
+      <a href="{% url 'listar_strategys_circulation' %}" class="">5.1 Estategias de Circulación</a>
+     </li>
+
+  </ul>
+</li>
+
         <li class="nav-item pcoded-menu-caption">
-          <label>Forms & table</label>
+          <label>Suite Analítica</label>
         </li>
-        <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item {% if 'form_elements' in segment %}active{% endif %}">
-          <a href="{% url 'form_elements' %}" class="nav-link "><span class="pcoded-micon"><i
-                class="feather icon-file-text"></i></span><span class="pcoded-mtext">Form elements</span></a>
-        </li>
-        <li data-username="Table bootstrap datatable footable" class="nav-item {% if 'basic_tables' in segment %}active{% endif %}">
-          <a href="{% url 'basic_tables' %}" class="nav-link "><span class="pcoded-micon"><i
-                class="feather icon-server"></i></span><span class="pcoded-mtext">Table</span></a>
-        </li>
-        <li class="nav-item pcoded-menu-caption">
-          <label>Chart & Maps</label>
-        </li>
-        <li data-username="Charts Morris" class="nav-item {% if 'morris_chart' in segment %}active{% endif %}"><a href="{% url 'morris_chart' %}" class="nav-link "><span
-              class="pcoded-micon"><i class="feather icon-pie-chart"></i></span><span
-              class="pcoded-mtext">Chart</span></a>
-        </li>
-        <li data-username="Maps Google" class="nav-item {% if 'google_maps' in segment %}active{% endif %}"><a href="{% url 'google_maps' %}" class="nav-link "><span
-              class="pcoded-micon"><i class="feather icon-map"></i></span><span class="pcoded-mtext">Maps</span></a>
-        </li>
-        <li class="nav-item pcoded-menu-caption">
-          <label>Pages</label>
-        </li>
-        <li
-          data-username="Authentication Sign up Sign in reset password Change password Personal information profile settings map form subscribe"
-          class="nav-item pcoded-hasmenu">
-          <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i
-                class="feather icon-lock"></i></span><span class="pcoded-mtext">Authentication</span></a>
+
+        <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+          <a href="#" class="nav-link">
+              <span class="pcoded-micon"><i class="feather icon-bar-chart-2"></i></span>
+              <span class="pcoded-mtext">Dashboard's</span>
+          </a>
           <ul class="pcoded-submenu">
-            <li class=""><a href="{% url 'register' %}" class="" target="_blank">Sign up</a></li>
-            <li class=""><a href="{% url 'login' %}" class="" target="_blank">Sign in</a></li>
+            <li>
+                <a href="#" class="{% if '2020' in segment %}active{% endif %}">
+                    <span class="pcoded-micon"><i class="feather icon-chevron-right"></i></span> <!-- Icono de flecha -->
+                    2020
+                </a>
+                <ul class="pcoded-submenu">
+                    <li>
+                        <a href="/dash-sociodemographic-2020/">Caracterización Sociodemográfica</a>
+                    </li>
+                    <li>
+                        <a href="/dash-join-annexes-2020/">Análisis de Anexos</a>
+                    </li>
+                    <li>
+                        <a href="/dash-summary-contracts-2020/">Ejecución Contractual</a>
+                    </li>
+                    <!-- Agrega más elementos de menú aquí según sea necesario -->
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" class="{% if '2021' in segment %}active{% endif %}">
+                    <span class="pcoded-micon"><i class="feather icon-chevron-right"></i></span> <!-- Icono de flecha -->
+                    2021
+                </a>
+                <ul class="pcoded-submenu">
+                  <li>
+                    <a href="/dash-sociodemographic-2021a/">Caracterización Sociodemográfica</a>
+                </li>
+                <li>
+                    <a href="/dash-cultural-activities-2021a/">Bitácoras Jornadas PACTO</a>
+                </li>
+                <li>
+                    <a href="/dash-cultural-dialogues-2021a">Diálogos Culturales</a>
+                </li>
+                <li>
+                    <a href="/dash-transfers-2021a/">Transferencias de Saberes</a>
+                </li>
+                <li>
+                    <a href="/dash-pedagogicals-2021a/">Fichas Pedagógicas</a>
+                </li>
+                <li>
+                    <a href="/dash-care-appointments-2021a/">Citas de Atención Psicosocial</a>
+                </li>
+                <li>
+                    <a href="/dash-instruments-2021a/">Instrumentos Validados</a>
+                </li>
+                
+                    <!-- Agrega más elementos de menú aquí según sea necesario -->
+                </ul>
+            </li>
+
+            <li>
+              <a href="#" class="{% if '2020' in segment %}active{% endif %}">
+                  <span class="pcoded-micon"><i class="feather icon-chevron-right"></i></span> <!-- Icono de flecha -->
+                  2021B-2022A
+              </a>
+              <ul class="pcoded-submenu">
+                <li>
+                  <a href="/dash-sociodemographic-2021b-2022a/">Caracterización Sociodemográfica</a>
+              </li>
+              <li>
+                  <a href="/dash-binnacles-2021b-2022a/">Bitácoras Jornadas PACTO</a>
+              </li>
+              <li>
+                  <a href="/dash-cultural-activations-2021b-2022a/">Activaciones Culturales</a>
+              </li>
+              <li>
+                  <a href="/dash-feedback-2021b-2022a/">Retroalimentación Activaciones</a>
+              </li>
+              <li>
+                  <a href="/dash-methodological-instructions-2021b-2022a/">Fichas Pedagógicas</a>
+              </li>
+              <li>
+                  <a href="/dash-methodological-instructions-2021b-2022a/">Instrucciones Metodológicas</a>
+              </li>
+              <li>
+                  <a href="/dash-psychosocial-instructions-2021b-2022a/">Instrucciones Psicosocial</a>
+              </li>
+              <li>
+                  <a href="/dash-care-appointments-2021b-2022a/">Citas de Atención Psicosocial</a>
+              </li>
+              <li>
+                  <a href="/dash-territorial-tables-2021b-2022a/">Mesas Territoriales de Desarrollo</a>
+              </li>
+
+        
+
+        
+                  <!-- Agrega más elementos de menú aquí según sea necesario -->
+              </ul>
+
+              <li>
+                <a href="#" class="{% if '2020' in segment %}active{% endif %}">
+                    <span class="pcoded-micon"><i class="feather icon-chevron-right"></i></span> <!-- Icono de flecha -->
+                    2022B
+                </a>
+                <ul class="pcoded-submenu">
+                  <li>
+                    <a href="/dash-sociodemographic-2022b/">Caracterización Sociodemográfica</a>
+                </li>
+                <li>
+                    <a href="/dash-binnacles-2022b/">Bitácoras Jornadas PACTO</a>
+                </li>
+                <li>
+                    <a href="/dash-pedagogicals-2022b/">Fichas Pedagógicas</a>
+                </li>
+                <li>
+                    <a href="/dash-activations-2022b/">Activaciones Culturales</a>
+                </li>
+                <li>
+                    <a href="/dash-ensembles-2022b/">Ensambles Culturales</a>
+                </li>
+                <li>
+                    <a href="/dash-seedbeds-2022b/">Semilleros Culturales</a>
+                </li>
+                <li>
+                    <a href="/dash-dialogues-2022b/">Mesas de Diálogo</a>
+                </li>
+                <li>
+                    <a href="/dash-carpet-2022b/">Tapetes Metodológicos</a>
+                </li>
+                <li>
+                    <a href="/dash-parents-2022b/">Escuela de Padres</a>
+                </li>
+                <li>
+                    <a href="/dash-care-appointments-2022b/">Citas de Atención Psicosocial</a>
+                </li>
+                <li>
+                    <a href="/dash-estragies-2022b/">Estrategias de Visiblización</a>
+                </li>
+                </ul>
+            </li>
+          </li>
+
+          <li>
+            <a href="#" class="{% if '2020' in segment %}active{% endif %}">
+                <span class="pcoded-micon"><i class="feather icon-chevron-right"></i></span> <!-- Icono de flecha -->
+                2023
+            </a>
+            <ul class="pcoded-submenu">
+              <li>
+                <a href="/dash-sociodemographic-2023a/">Caracterización Sociodemográfica</a>
+            </li>
+            <li>
+                <a href="/dash-activations-2023a/">Activaciones Culturales</a>
+            </li>
+            <li>
+                <a href="/dash-assembly-2023a/">Ensamble Cultural</a>
+            </li>
+            <li>
+                <a href="/dash-circulations-2023a/">Circulaciones Culturales</a>
+            </li>
+            <li>
+                <a href="/dash-seedbeds-2023a/">Semilleros Culturales</a>
+            </li>
+            <li>
+                <a href="/dash-jornalitys/">Jornadas de Acompañamiento ASYM, Metodológico, Supervisión</a>
+            </li>
+            <li>
+                <a href="/dash-pedagogicals-2023a/">Fichas de Planeación Pedagógica</a>
+            </li>
+            <li>
+                <a href="/dash-show-cultural-2023a/">Show Cultural</a>
+            </li>
+            <li>
+                <a href="/dash-transfers-2023a/">Transferencias</a>
+            </li>
+            <li>
+                <a href="/dash-psicopedagogicals-2023a/">Bitácoras Psicopedagógicas</a>
+            </li>
+            </ul>
+        </li>
+      </li>
+
+
+        </ul>
+
+        <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+          <a href="javascript:" class="nav-link">
+              <span class="pcoded-micon"><i class="feather icon-list"></i></span>
+              <span class="pcoded-mtext">Rankings</span>
+        
+          </a>
+          <ul class="pcoded-submenu">
+            <li>
+              <a href="/ranking-2020/">2020</a>
+          </li>
+            <li>
+              <a href="/ranking-2021a/">2021A</a>
+          </li>
+          <li>
+            <a href="/ranking-2021b-2022a/">2021B-2022A</a>
+        </li>
+        <li>
+          <a href="/ranking-2022b/">2022B</a>
+      </li>
+      <li>
+        <a href="/ranking-2021a/">2023</a>
+    </li>
           </ul>
         </li>
-        <li data-username="Profile Page" class="nav-item {% if 'profile' in segment %}active{% endif %}"><a href="{% url 'profile' %}" class="nav-link"><span
-              class="pcoded-micon"><i class="feather icon-user"></i></span><span class="pcoded-mtext">Profile
-              Page</span></a>
+
+        <li class="nav-item pcoded-menu-caption">
+          <label>Gestión de Informes</label>
         </li>
-        <li data-username="Sample Page" class="nav-item {% if 'sample_page' in segment %}active{% endif %}"><a href="{% url 'sample_page' %}" class="nav-link"><span
-              class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample
-              page</span></a>
-        </li>
-        <li data-username="Disabled Menu" class="nav-item disabled"><a href="javascript:" class="nav-link"><span
-              class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">Disabled
-              menu</span></a>
-        </li>
+
+
+        <li class="nav-item pcoded-hasmenu {% if 'basic_components' in parent %}active pcoded-trigger{% endif %}">
+          <a href="javascript:" class="nav-link">
+              <span class="pcoded-micon"><i class="feather icon-file-text"></i></span>
+              <span class="pcoded-mtext">Informes de Ejecución</span>
+          </a>
+          <ul class="pcoded-submenu">
+              {% if user.is_staff %}
+              <li>
+                  <a href="/create-pdf/">Cargar Informe</a>
+              </li>
+              {% endif %}
+              <li>
+                  <a href="/view-pdf/">Listar Informe</a>
+              </li>
+          </ul>
+      </li>
+      
         {% endif %}
       </ul>
     </div>

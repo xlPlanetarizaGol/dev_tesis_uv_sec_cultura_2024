@@ -12,11 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os, random, string, inspect
 from pathlib import Path
-from dotenv import load_dotenv
 
-import django_dyn_dt
-
-load_dotenv()  # take environment variables from .env.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -100,35 +96,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DB_ENGINE   = os.getenv('DB_ENGINE'   , None)
-DB_USERNAME = os.getenv('DB_USERNAME' , None)
-DB_PASS     = os.getenv('DB_PASS'     , None)
-DB_HOST     = os.getenv('DB_HOST'     , None)
-DB_PORT     = os.getenv('DB_PORT'     , None)
-DB_NAME     = os.getenv('DB_NAME'     , None)
-
-if DB_ENGINE and DB_NAME and DB_USERNAME:
-    DATABASES = { 
-      'default': {
-        'ENGINE'  : 'django.db.backends.' + DB_ENGINE, 
-        'NAME'    : DB_NAME,
-        'USER'    : DB_USERNAME,
-        'PASSWORD': DB_PASS,
-        'HOST'    : DB_HOST,
-        'PORT'    : DB_PORT,
-        }, 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rmc_cultura',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+        },
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -167,11 +147,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-DYN_DB_PKG_ROOT = os.path.dirname( inspect.getfile( django_dyn_dt ) ) # <-- NEW: Dynamic_DT
-
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(DYN_DB_PKG_ROOT, "templates/static"),                # <-- NEW: Dynamic_DT 
 )
 
 #if not DEBUG:
@@ -185,18 +162,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# ### DYNAMIC_DATATB Settings ###
-DYNAMIC_DATATB = {
-    # SLUG -> Import_PATH 
-    'product'  : "home.models.Product",
-}
 ########################################
 
 # ### API-GENERATOR Settings ###
-API_GENERATOR = {
-    # SLUG -> Import_PATH 
-    'product'  : "home.models.Product",
-}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -205,3 +173,4 @@ REST_FRAMEWORK = {
     ],
 }
 ########################################
+

@@ -1,0 +1,206 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .hidden {
+      display: none;
+    }
+</style>
+  
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<link rel="stylesheet" href="{% static 'assets/css/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/jqueryui.min.css' %}"> 
+<div class="row">
+  <div class="col-sm-12">
+      <div class="card">
+          <div id="buttons-container" class="card-header">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <h1>Cargar PDF</h1>
+                  <form method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <label for="id_period">Periodo:</label>
+                      {{ form.period }}
+                      <br>
+                      <label for="id_name">Nombre:</label>
+                      {{ form.name }}
+                      <br>
+                      <label for="id_file">Archivo:</label>
+                      <!-- Campo de carga de archivo -->
+                      {{ form.file }}
+                      <br>
+                      <button type="submit">Cargar PDF</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="card">
+  <div class="card-body">
+      <h2>Lista de PDFs</h2>
+      <table id="pdf" class="display" style="width:100%">
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Periodo</th>
+                  <th>Nombre</th>
+                  <th>Archivo</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for pdf in pdfs %}
+              <tr id="pdf_row_{{ pdf.id }}">
+                  <td>{{ pdf.id }}</td>
+                  <td>{{ pdf.period }}</td>
+                  <td>{{ pdf.name }}</td>
+                  <td>{{ pdf.file }}</td>
+                  <td>{{ pdf.upload_date }}</td>
+                  <td>
+                      <a href="{% url 'ver_pdf' pdf.id %}" target="_blank">
+                          <i class="fas fa-eye text-primary"></i> Ver
+                      </a>
+                      <a href="{% url 'editar_pdf' pdf.id %}">
+                          <i class="fas fa-pencil-alt text-warning"></i> Editar
+                      </a>
+                      <a href="#" class="eliminar-pdf" data-pdfid="{{ pdf.id }}">
+                          <i class="fas fa-trash-alt text-danger"></i> Eliminar
+                      </a>
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<script src="{% static 'assets/js/jquery-3.7.0.js' %}"></script>
+<script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/dataTables.jqueryui.min.js' %}"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+
+<script>
+
+  jQuery(document).ready(function($) {
+    $.ajax({
+      url: "{% static 'assets/json/Spanish.json' %}",
+      dataType: 'json',
+      async: false,
+      success: function(data) {
+        $.extend(true, $.fn.dataTable.defaults, {
+          language: data
+        });
+      }
+    });
+
+    function obtenerNombreArchivo() {
+      var fechaActual = new Date();
+      var año = fechaActual.getFullYear();
+      var mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+      var dia = fechaActual.getDate().toString().padStart(2, '0');
+      
+      return 'activaciones_culturales_2021b_2022a_' + año + '_' + mes + '_' + dia;
+    }
+
+    var opcionesExportacion = {
+      columns: ':visible'
+    };
+
+    var botonesExportacion = [
+      {
+        extend: 'copy',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'csv',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'excel',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      },
+      {
+        extend: 'pdf',
+        orientation: 'landscape',
+        filename: obtenerNombreArchivo(),
+        exportOptions: opcionesExportacion
+      }
+    ];
+
+    var mediaTable = $('#pdf').removeClass('hidden').DataTable({
+      autoWidth: true, // Redimensiona las columnas automáticamente
+      buttons: botonesExportacion,
+      "scrollX": true, // Permitir desplazamiento horizontal si la tabla es demasiado ancha
+      "scrollCollapse": true, // Colapsar el desplazamiento si no es necesario
+    });
+
+    $('#copy-btn').on('click', function() {
+      mediaTable.button(0).trigger();
+    });
+
+    $('#csv-btn').on('click', function() {
+      mediaTable.button(1).trigger();
+    });
+
+    $('#excel-btn').on('click', function() {
+      mediaTable.button(2).trigger();
+    });
+
+    $('#pdf-btn').on('click', function() {
+      mediaTable.button(3).trigger();
+    });
+  });
+
+
+  $(document).ready(function () {
+      // Función para manejar el evento de clic en el enlace Eliminar
+      $(".eliminar-pdf").click(function (e) {
+          e.preventDefault();
+          // Obtener el ID del PDF a eliminar
+          var pdfId = $(this).data('pdfid');
+          // Confirmar la eliminación
+          if (confirm("¿Estás seguro de que deseas eliminar este PDF?")) {
+              // Realizar la petición AJAX para eliminar el PDF
+              $.ajax({
+                  url: "{% url 'eliminar_pdf' 0 %}".replace('0', pdfId),  // Reemplazar '0' con el ID del PDF
+                  type: 'POST',
+                  data: {
+                      'csrfmiddlewaretoken': '{{ csrf_token }}'  // Agregar el token CSRF para la seguridad
+                  },
+                  success: function (response) {
+                      // Eliminar la fila de la tabla
+                      $("#pdf_row_" + pdfId).remove();
+                      alert("PDF eliminado correctamente");
+                      location.reload();
+
+                  },
+                  error: function (xhr, status, error) {
+                      console.error('Error al eliminar el PDF:', error);
+                      alert("Error al eliminar el PDF");
+                  }
+              });
+          }
+      });
+  });
+
+
+
+</script>
+
+{% endblock content %}
+

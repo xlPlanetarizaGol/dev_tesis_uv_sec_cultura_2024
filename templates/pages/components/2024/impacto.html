@@ -1,0 +1,267 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+
+<style>
+    .loader-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Elimina la altura del 100% para permitir que el loader sea visible */
+        /* height: 100vh; */
+    }
+
+    .loader {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<link rel="stylesheet" href="{% static 'assets/css/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/jqueryui.min.css' %}"> 
+
+<div class="row">
+    <!-- Tabla de Indicadores -->
+    <div class="col-md-12">
+        <div class="card">
+            <div id="buttons-container" class="card-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h5 style="margin: 0;">Análisis Multivariable</h5>
+                    <div>
+                        <button class="btn btn-success btn-sm" id="copy-btn">
+                            <i class="fas fa-copy fa-sm"></i> Copiar
+                        </button>
+                        <button class="btn btn-info btn-sm" id="csv-btn">
+                            <i class="fas fa-file fa-sm"></i> CSV
+                        </button>
+                        <button class="btn btn-warning btn-sm" id="excel-btn">
+                            <i class="fas fa-file-excel fa-sm"></i> Excel
+                        </button>
+                        <button class="btn btn-danger btn-sm" id="pdf-btn">
+                            <i class="fas fa-file-pdf fa-sm"></i> PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="monitros_2024" class="display hidden" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="text-align: center;">Variables</th>
+                            <th colspan="6" style="text-align: center;">Grupos Poblacionales</th>
+                            <th colspan="8" style="text-align: center;">Niveles Educativos</th>
+                            <th colspan="2" style="text-align: center;">Discapacidad</th>
+                            <th colspan="7" style="text-align: center;">Pertenencia Étnica</th>
+                            <th colspan="4" style="text-align: center;">Enfoque Diferencial</th>
+                            <th colspan="1" style="text-align: center;">Condición</th>
+                        </tr>
+                        
+                        <tr>
+                            <th>NAC</th>
+                            <th>Población</th>
+                            <th>Primera Infancia</th>
+                            <th>Infancia</th>
+                            <th>Adolescencia</th>
+                            <th>Juventud</th>
+                            <th>Adulto</th>
+                            <th>Adulto Mayor</th>
+                            <th>Bachillerato</th>
+                            <th>Ninguno</th>
+                            <th>Posgrado</th>
+                            <th>Preescolar</th>
+                            <th>Pregrado</th>
+                            <th>Primaria</th>
+                            <th>Técnico</th>
+                            <th>Tecnólogo</th>
+                            <th>Si</th>
+                            <th>No</th>
+                            <th>Afro</th>
+                            <th>Indígena</th>
+                            <th>Negro</th>
+                            <th>Ninguna</th>
+                            <th>Palenquero</th>
+                            <th>Raizal</th>
+                            <th>Rom</th>
+                            <th>Masculino</th>
+                            <th>Femenino</th>
+                            <th>LGBTIQ+</th>
+                            <th>Otro</th>
+                            <th>Víctimas Conflicto Armado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Iterar sobre los datos de impact_objects -->
+                        {% for data in impact_objects %}
+                        <tr>
+                            <td>{{ data.nac }}</td>
+                            <td>{{ data.beneficiaries }}</td>
+                            <td>{{ data.early_childhood }}</td>
+                            <td>{{ data.childhood }}</td>
+                            <td>{{ data.adolescence }}</td>
+                            <td>{{ data.youth }}</td>
+                            <td>{{ data.adult }}</td>
+                            <td>{{ data.elderly }}</td>
+                            <td>{{ data.high_school }}</td>
+                            <td>{{ data.none_school }}</td>
+                            <td>{{ data.postgraduate }}</td>
+                            <td>{{ data.preschool }}</td>
+                            <td>{{ data.undergraduate }}</td>
+                            <td>{{ data.primary_school }}</td>
+                            <td>{{ data.technical }}</td>
+                            <td>{{ data.technologist }}</td>
+                            <td>{{ data.disability }}</td>
+                            <td>{{ data.non_disability }}</td>
+                            <td>{{ data.afrodescendant }}</td>
+                            <td>{{ data.indigenous }}</td>
+                            <td>{{ data.black }}</td>
+                            <td>{{ data.none_ethnicity }}</td>
+                            <td>{{ data.palenquero }}</td>
+                            <td>{{ data.raizal }}</td>
+                            <td>{{ data.rom }}</td>
+                            <td>{{ data.male }}</td>
+                            <td>{{ data.female }}</td>
+                            <td>{{ data.lgtbiq_plus }}</td>
+                            <td>{{ data.other_gender }}</td>
+                            <td>{{ data.conflict_victims }}</td>
+                        </tr>
+                        {% endfor %}
+                        <!-- Fin de la iteración -->
+                    </tbody>
+                    <script>
+                        if ( window.history.replaceState ) {
+                            window.history.replaceState( null, null, window.location.href );
+                        }
+                    </script>
+                </table>
+            </div>
+            <div class="card-footer text-center">
+                <form id="upload-form" action="{% url 'impact_2024' %}" method="post" enctype="multipart/form-data" onsubmit="mostrarLoader()">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center align-items-center">
+                        <input type="file" name="archivos" accept=".xls" class="mr-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload mr-2"></i> Cargar Archivo
+                        </button>
+                    </div>
+                </form>
+            </div>   
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="{% static 'assets/js/jquery-3.7.0.js' %}"></script>
+<script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/dataTables.jqueryui.min.js' %}"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<script>
+
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+
+    jQuery(document).ready(function($) {
+        $.ajax({
+            url: "{% static 'assets/json/Spanish.json' %}",
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+                $.extend(true, $.fn.dataTable.defaults, {
+                    language: data
+                });
+            }
+        });
+
+        function obtenerNombreArchivo() {
+            var fechaActual = new Date();
+            var año = fechaActual.getFullYear();
+            var mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+            var dia = fechaActual.getDate().toString().padStart(2, '0');
+
+            return 'variables_' + año + '_' + mes + '_' + dia;
+        }
+
+        var opcionesExportacion = {
+            columns: ':visible'
+        };
+
+        var botonesExportacion = [
+            {
+                extend: 'copy',
+                filename: obtenerNombreArchivo(),
+                exportOptions: opcionesExportacion
+            },
+            {
+                extend: 'csv',
+                filename: obtenerNombreArchivo(),
+                exportOptions: opcionesExportacion
+            },
+            {
+                extend: 'excel',
+                filename: obtenerNombreArchivo(),
+                exportOptions: opcionesExportacion
+            },
+            {
+                extend: 'pdf',
+                orientation: 'landscape',
+                filename: obtenerNombreArchivo(),
+                exportOptions: opcionesExportacion
+            }
+        ];
+
+        var mediaTable = $('#monitros_2024').removeClass('hidden').DataTable({
+            autoWidth: true,
+            buttons: botonesExportacion,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "searchRegex": true,
+            "columnDefs": [
+                { "searchable": true, "targets": [1] }
+            ],
+            "search": {
+                "regex": true,
+                "smart": false
+            },
+            "pageLength": 100 // Iniciar con 100 registros por página
+        });
+
+        $('#copy-btn').on('click', function() {
+            mediaTable.button(0).trigger();
+        });
+
+        $('#csv-btn').on('click', function() {
+            mediaTable.button(1).trigger();
+        });
+
+        $('#excel-btn').on('click', function() {
+            mediaTable.button(2).trigger();
+        });
+
+        $('#pdf-btn').on('click', function() {
+            mediaTable.button(3).trigger();
+        });
+    });
+</script>
+
+
+{% endblock content %}

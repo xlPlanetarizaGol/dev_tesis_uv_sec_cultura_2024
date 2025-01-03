@@ -1,0 +1,441 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  .hidden {
+    display: none;
+  }
+
+  #fecha_seleccionada {
+    width: 300px; /* Ajusta el ancho según sea necesario */
+}
+
+</style>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<link rel="stylesheet" href="{% static 'assets/css/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/jqueryui.min.css' %}"> 
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div id="buttons-container" class="card-header">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h5 style="margin: 0;">Embajadores Culturales</h5>
+                                <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <form id="filtro-form" method="GET" action="{% url 'calcular_registros_por_semana' %}">
+                            <!-- Agrega tu formulario aquí -->
+                            <div class="mb-3">
+                                <label for="fecha_seleccionada" class="form-label">Selecciona un corte de pago a buscar:</label>
+                                <select class="form-select" id="fecha_seleccionada" name="fecha_seleccionada">
+                                    {% for fecha in fechas_carga %}
+                                        <option value="{{ fecha }}">{{ fecha }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="hidden" id="fecha_seleccionada_hidden" name="fecha_seleccionada_hidden">
+                                <button type="submit" class="btn btn-primary">Filtrar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form id="eliminar-registros-form">
+                            <div class="mb-3">
+                                <label for="fecha" class="form-label">Seleccione un corte de pago a eliminar:</label>
+                                <select class="form-select" id="fecha" name="fecha">
+                                    {% for fecha in fechas_carga %}
+                                        <option value="{{ fecha }}">{{ fecha }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </form>
+                    <div>
+                        <button class="btn btn-success btn-sm" id="copy-btn">
+                            <i class="fas fa-copy fa-sm"></i> Copiar
+                        </button>
+                        <button class="btn btn-warning btn-sm" id="excel-btn">
+                            <i class="fas fa-file-excel fa-sm"></i> Excel
+                        </button>
+                        <button class="btn btn-danger btn-sm" id="pdf-btn">
+                            <i class="fas fa-file-pdf fa-sm"></i> PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="card-body">
+                <table id="monitros_2024" class="display hidden" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Datos Generales</th>
+                            <th colspan="4">Marzo [Ben]</th>
+                            <th colspan="4">Abril [Ben]</th>
+                            <th colspan="4">Mayo [Ben]</th>
+                            <th colspan="4">Junio [Ben]</th>
+                            <th colspan="4">Julio [Ben]</th>
+                            <th colspan="4">Agosto [Ben]</th>
+                            <th colspan="4">Marzo [FP]</th>
+                            <th colspan="4">Abril [FP]</th>
+                            <th colspan="4">Mayo [FP]</th>
+                            <th colspan="4">Junio [FP]</th>
+                            <th colspan="4">Julio [FP]</th>
+                            <th colspan="4">Agosto [FP]</th>
+                            <!-- Aquí continúa con las demás columnas... -->
+                        </tr>
+                        <tr>
+                            <th>Monitor</th>
+                            <th>CC.</th>
+                            <th>NAC</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>Total Beneficiarios</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>Total Fichas Pedagógicas</th>
+                            <th>Pago</th>
+                            <th>Fecha Cargue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registro in registros %}
+                        <tr>
+                            <td>{{ registro.usuario }}</td>
+                            <td>{{ registro.cedula_monitor }}</td>
+                            <td>{{ registro.nac_monitor }}</td>
+                            <td>{{ registro.marzo_semana_1 }}</td>
+                            <td>{{ registro.marzo_semana_2 }}</td>
+                            <td>{{ registro.marzo_semana_3 }}</td>
+                            <td>{{ registro.marzo_semana_4 }}</td>
+                            <td>{{ registro.abril_semana_1 }}</td>
+                            <td>{{ registro.abril_semana_2 }}</td>
+                            <td>{{ registro.abril_semana_3 }}</td>
+                            <td>{{ registro.abril_semana_4 }}</td>
+                            <td>{{ registro.mayo_semana_1 }}</td>
+                            <td>{{ registro.mayo_semana_2 }}</td>
+                            <td>{{ registro.mayo_semana_3 }}</td>
+                            <td>{{ registro.mayo_semana_4 }}</td>
+                            <td>{{ registro.junio_semana_1 }}</td>
+                            <td>{{ registro.junio_semana_2 }}</td>
+                            <td>{{ registro.junio_semana_3 }}</td>
+                            <td>{{ registro.junio_semana_4 }}</td>
+                            <td>{{ registro.julio_semana_1 }}</td>
+                            <td>{{ registro.julio_semana_2 }}</td>
+                            <td>{{ registro.julio_semana_3 }}</td>
+                            <td>{{ registro.julio_semana_4 }}</td>
+                            <td>{{ registro.agosto_semana_1 }}</td>
+                            <td>{{ registro.agosto_semana_2 }}</td>
+                            <td>{{ registro.agosto_semana_3 }}</td>
+                            <td>{{ registro.agosto_semana_4 }}</td>
+                            <td>{{ registro.total_registros_ben }}</td>
+
+                            <td>{{ registro.marzo_semana_1_fp }}</td>
+                            <td>{{ registro.marzo_semana_2_fp }}</td>
+                            <td>{{ registro.marzo_semana_3_fp }}</td>
+                            <td>{{ registro.marzo_semana_4_fp }}</td>
+                            <td>{{ registro.abril_semana_1_fp }}</td>
+                            <td>{{ registro.abril_semana_2_fp }}</td>
+                            <td>{{ registro.abril_semana_3_fp }}</td>
+                            <td>{{ registro.abril_semana_4_fp }}</td>
+                            <td>{{ registro.mayo_semana_1_fp }}</td>
+                            <td>{{ registro.mayo_semana_2_fp }}</td>
+                            <td>{{ registro.mayo_semana_3_fp }}</td>
+                            <td>{{ registro.mayo_semana_4_fp }}</td>
+                            <td>{{ registro.junio_semana_1_fp }}</td>
+                            <td>{{ registro.junio_semana_2_fp }}</td>
+                            <td>{{ registro.junio_semana_3_fp }}</td>
+                            <td>{{ registro.junio_semana_4_fp }}</td>
+                            <td>{{ registro.julio_semana_1_fp }}</td>
+                            <td>{{ registro.julio_semana_2_fp }}</td>
+                            <td>{{ registro.julio_semana_3_fp }}</td>
+                            <td>{{ registro.julio_semana_4_fp }}</td>
+                            <td>{{ registro.agosto_semana_1_fp }}</td>
+                            <td>{{ registro.agosto_semana_2_fp }}</td>
+                            <td>{{ registro.agosto_semana_3_fp }}</td>
+                            <td>{{ registro.agosto_semana_4_fp }}</td>
+                            <td>{{ registro.total_registros_fp }}</td>
+                            
+                                               
+                            <td>
+                                {% if registro.estado == "APROBADO" %}
+                                    <i class="fas fa-check-circle text-success"></i> Si
+                                {% else %}
+                                    <i class="fas fa-times-circle text-danger"></i> No
+                                {% endif %}
+                            </td>
+                            <td>{{ registro.upload_date|date:"Y-m-d H:i:s" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <script>
+                    if ( window.history.replaceState ) {
+                        window.history.replaceState( null, null, window.location.href );
+                    }
+                </script>
+            </div>
+            <div class="card-footer text-center">
+                <form id="upload-form" method="post" enctype="multipart/form-data" onsubmit="mostrarSpinner()">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload mr-2"></i> Cargar Archivos
+                    </button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+    
+      <script src="{% static 'assets/js/jquery-3.7.0.js' %}"></script>
+      <script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+      <script src="{% static 'assets/js/dataTables.jqueryui.min.js' %}"></script>
+      <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+      <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+      <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+      
+      <script>
+        $(document).ready(function() {
+            // Manejador de envío de formulario para eliminar registros por fecha
+            $("#eliminar-registros-form").submit(function(event){
+                event.preventDefault(); // Evita el envío del formulario por defecto
+    
+                // Obtiene la fecha seleccionada por el usuario
+                var formattedDate = $("#fecha").val();
+    
+                // Pregunta al usuario si realmente quiere eliminar los registros
+                var confirmDelete = confirm("¿Estás seguro de que quieres eliminar los registros para la fecha seleccionada?");
+    
+                // Si el usuario confirma que quiere eliminar los registros, procede con la solicitud AJAX
+                if (confirmDelete) {
+                    $.ajax({
+                        url: '{% url "eliminar_corte_pago" %}',
+                        method: 'POST',
+                        data: {
+                            'fecha': formattedDate,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response){
+                            alert(response.message);
+                            location.reload();
+                        },
+                        error: function(xhr, errmsg, err){
+                            console.log(xhr.status + ": " + xhr.responseText);
+                            alert('Error al eliminar registros. Por favor, inténtalo de nuevo.');
+                        }
+                    });
+                }
+            });
+    
+            // Hacer una solicitud AJAX para obtener las fechas únicas
+            $.ajax({
+                url: '{% url "obtener_fechas_unicas" %}',
+                success: function(response){
+                    var fechas_unicas = response.fechas_unicas;
+    
+                    // Llenar el select con las fechas únicas obtenidas
+                    var selectFecha = $('#fecha');
+    
+                    // Borrar todas las opciones existentes en el select
+                    selectFecha.empty();
+    
+                    // Agregar una opción vacía al inicio
+                    selectFecha.append($('<option>', {
+                        value: '',
+                        text: ''
+                    }));
+    
+                    // Agregar las fechas únicas al select
+                    $.each(fechas_unicas, function(index, fecha) {
+                        selectFecha.append($('<option>', {
+                            value: fecha,
+                            text: fecha
+                        }));
+                    });
+    
+                    // Habilitar el formulario una vez que se hayan cargado las fechas únicas
+                    $("#eliminar-registros-form").removeClass('hidden');
+                },
+                error: function(xhr, errmsg, err){
+                    console.log(xhr.status + ": " + xhr.responseText);
+                    alert('Error al obtener las fechas únicas. Por favor, inténtalo de nuevo.');
+                }
+            });
+        });
+    
+    
+        $(document).ready(function($) {
+            $.ajax({
+                url: "{% static 'assets/json/Spanish.json' %}",
+                dataType: 'json',
+                async: false,
+                success: function(data) {
+                    $.extend(true, $.fn.dataTable.defaults, {
+                        language: data
+                    });
+                }
+            });
+    
+            function obtenerNombreArchivo() {
+                var fechaActual = new Date();
+                var año = fechaActual.getFullYear();
+                var mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+                var dia = fechaActual.getDate().toString().padStart(2, '0');
+    
+                return 'pagos_educadores_' + año + '_' + mes + '_' + dia;
+            }
+    
+            var opcionesExportacion = {
+                columns: ':visible'
+            };
+    
+            var botonesExportacion = [
+                {
+                    extend: 'copy',
+                    filename: obtenerNombreArchivo(),
+                    exportOptions: opcionesExportacion
+                },
+                {
+                    extend: 'csv',
+                    filename: obtenerNombreArchivo(),
+                    exportOptions: opcionesExportacion
+                },
+                {
+                    extend: 'excel',
+                    filename: obtenerNombreArchivo(),
+                    exportOptions: opcionesExportacion
+                },
+                {
+                    extend: 'pdf',
+                    orientation: 'landscape',
+                    filename: obtenerNombreArchivo(),
+                    exportOptions: opcionesExportacion
+                }
+            ];
+    
+            var mediaTable = $('#monitros_2024').removeClass('hidden').DataTable({
+                autoWidth: true, // Redimensiona las columnas automáticamente
+                buttons: botonesExportacion,
+                "scrollX": true, // Permitir desplazamiento horizontal si la tabla es demasiado ancha
+                "scrollCollapse": true, // Colapsar el desplazamiento si no es necesario
+                "searchRegex": true,
+                "columnDefs": [
+                    { "searchable": true, "targets": [1] } // Índice de la columna de las comunas donde quieres habilitar la búsqueda
+                ],
+                "search": {
+                    "regex": true,
+                    "smart": false
+                }
+            });
+    
+            $('#copy-btn').on('click', function() {
+                mediaTable.button(0).trigger();
+            });
+    
+            $('#csv-btn').on('click', function() {
+                mediaTable.button(1).trigger();
+            });
+    
+            $('#excel-btn').on('click', function() {
+                mediaTable.button(2).trigger();
+            });
+    
+            $('#pdf-btn').on('click', function() {
+                mediaTable.button(3).trigger();
+            });
+        });
+    
+        $(document).ready(function($) {
+            // Función para mostrar el spinner mientras se carga el archivo
+            function mostrarSpinner() {
+                $('#upload-spinner').removeClass('hidden');
+            }
+    
+            // Al enviar el formulario, mostrar el spinner
+            $('#upload-form').on('submit', function() {
+                mostrarSpinner();
+            });
+    
+            // Cuando la página se haya cargado completamente
+            $(window).on('load', function() {
+                // Obtener el parámetro de la URL si se ha enviado correctamente el formulario
+                var urlParams = new URLSearchParams(window.location.search);
+                var uploadSuccess = urlParams.get('upload_success');
+    
+                // Si se envió correctamente el formulario, ocultar el formulario de carga
+                if (uploadSuccess === 'true') {
+                    $('#upload-form').addClass('hidden');
+                }
+            });
+        });
+
+        
+
+
+
+
+
+
+    </script>
+      
+      
+        
+{% endblock content %}
