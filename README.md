@@ -25,3 +25,6 @@ La herramienta también genera informes detallados que son de gran utilidad para
 - **Base de Datos**: MySQL
 - **Análisis de Datos**: Python (Pandas, NumPy, Matplotlib)
 - **Visualización**: Tableau, Excel
+
+- ## Autor
+- **Sebastián Tutistar Valencia - Universidad del Valle - Gobernación del Valle del Cauca - Secretaría de Cultura**
